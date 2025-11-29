@@ -1,0 +1,163 @@
+  {
+    "site": {
+      "name": "CASA Tejuela",
+      "description": "Galería-tienda cultural en Puerto Montt, Chile",
+      "contact": {
+        "email": "contacto@casatejuela.cl",
+        "phone": "+56 9 1234 5678",
+        "address": "Puerto Montt, Región de Los Lagos, Chile"
+      },
+      "social": {
+        "instagram": "https://instagram.com/casatejuela",
+        "facebook": "https://facebook.com/casatejuela"
+      }
+    },
+    "carousel": [
+      {
+        "id": 1,
+        "image": "/placeholder.svg?height=600&width=1200",
+        "alt": "Arquitectura tradicional de tejuela en Puerto Montt"
+      },
+      {
+        "id": 2,
+        "image": "/placeholder.svg?height=600&width=1200",
+        "alt": "Artesano local trabajando con cerámica"
+      },
+      {
+        "id": 3,
+        "image": "/placeholder.svg?height=600&width=1200",
+        "alt": "Interior de galería cultural con arte local"
+      }
+    ],
+    "about": {
+      "title": "Quiénes Somos",
+      "content": "CASA Tejuela es una galería-tienda cultural ubicada en el corazón de Puerto Montt, dedicada a promover y preservar el arte y la cultura local de la Región de Los Lagos. Nuestro espacio reúne a artistas locales, artesanos y creadores que mantienen vivas las tradiciones culturales de nuestra región, desde la arquitectura de tejuela hasta las expresiones artísticas contemporáneas que dialogan con nuestro patrimonio."
+    },
+    "gallery": [
+      {
+        "id": 1,
+        "title": "Paisajes del Sur",
+        "artist": "María González",
+        "image": "/placeholder.svg?height=400&width=400",
+        "description": "Óleo sobre tela que captura la esencia de los paisajes patagónicos"
+      },
+      {
+        "id": 2,
+        "title": "Tejuelas Ancestrales",
+        "artist": "Carlos Muñoz",
+        "image": "/placeholder.svg?height=400&width=400",
+        "description": "Instalación que honra la tradición arquitectónica local"
+      },
+      {
+        "id": 3,
+        "title": "Memorias del Lago",
+        "artist": "Ana Pérez",
+        "image": "/placeholder.svg?height=400&width=400",
+        "description": "Cerámica inspirada en las aguas del Lago Llanquihue"
+      }
+    ],
+    "projects": [
+      {
+        "id": 1,
+        "title": "Dossier: Artesanos del Lago",
+        "description": "Portafolio colectivo de artesanos locales que trabajan con materiales tradicionales de la región.",
+        "artist": "Colectivo Artesanal",
+        "image": "/placeholder.svg?height=300&width=400",
+        "slug": "artesanos-del-lago"
+      },
+      {
+        "id": 2,
+        "title": "Patrimonio Arquitectónico",
+        "description": "Documentación fotográfica y artística del patrimonio arquitectónico de Puerto Montt.",
+        "artist": "Roberto Silva",
+        "image": "/placeholder.svg?height=300&width=400",
+        "slug": "patrimonio-arquitectonico"
+      }
+    ],
+    "store": [
+      {
+        "id": 1,
+        "name": "Cerámica Lago Azul",
+        "price": 25000,
+        "image": "/placeholder.svg?height=300&width=300",
+        "description": "Cuenco de cerámica artesanal inspirado en los colores del lago",
+        "artist": "Ana Pérez",
+        "category": "ceramica"
+      },
+      {
+        "id": 2,
+        "name": "Pintura Volcán Osorno",
+        "price": 150000,
+        "image": "/placeholder.svg?height=300&width=300",
+        "description": "Óleo sobre tela del icónico volcán Osorno",
+        "artist": "María González",
+        "category": "pintura"
+      },
+      {
+        "id": 3,
+        "name": "Tejuela Decorativa",
+        "price": 35000,
+        "image": "/placeholder.svg?height=300&width=300",
+        "description": "Tejuela de alerce tallada a mano con motivos locales",
+        "artist": "Carlos Muñoz",
+        "category": "artesania"
+      }
+    ],
+    "artists": [
+      {
+        "id": 1,
+        "name": "María González",
+        "bio": "Pintora local especializada en paisajes patagónicos. Sus obras capturan la esencia de la naturaleza austral con una técnica refinada y una paleta de colores que evoca la majestuosidad de la región.",
+        "image": "/placeholder.svg?height=400&width=400",
+        "specialty": "Pintura al óleo",
+        "slug": "maria-gonzalez",
+        "works": [
+          {
+            "title": "Amanecer en el Lago",
+            "image": "/placeholder.svg?height=300&width=400",
+            "year": "2023"
+          },
+          {
+            "title": "Volcán en Invierno",
+            "image": "/placeholder.svg?height=300&width=400",
+            "year": "2023"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Carlos Muñoz",
+        "bio": "Maestro carpintero y artista que trabaja con maderas nativas, especializándose en la técnica tradicional de tejuela. Su trabajo preserva y reinterpreta las técnicas ancestrales de construcción local.",
+        "image": "/placeholder.svg?height=400&width=400",
+        "specialty": "Carpintería y tejuela",
+        "slug": "carlos-munoz",
+        "works": [
+          {
+            "title": "Panel Tejuela Contemporáneo",
+            "image": "/placeholder.svg?height=300&width=400",
+            "year": "2023"
+          },
+          {
+            "title": "Escultura Alerce",
+            "image": "/placeholder.svg?height=300&width=400",
+            "year": "2022"
+          }
+        ]
+      }
+    ],
+    "tourism": {
+      "title": "Puerto Montt: Patrimonio y Cultura",
+      "sections": [
+        {
+          "title": "La Arquitectura de Tejuela",
+          "content": "La tejuela es una técnica constructiva tradicional de la región, caracterizada por el uso de tablillas de madera superpuestas que protegen las construcciones del clima húmedo del sur de Chile. Esta técnica, heredada de la tradición chilota y alemana, define el paisaje arquitectónico de Puerto Montt.",
+          "image": "/placeholder.svg?height=400&width=600"
+        },
+        {
+          "title": "Identidad Cultural",
+          "content": "Puerto Montt es el punto de encuentro entre la cultura mapuche, chilota y europea. Esta confluencia ha dado origen a una identidad única que se expresa en el arte, la gastronomía, la música y las tradiciones locales que preservamos y promovemos en CASA Tejuela.",
+          "image": "/placeholder.svg?height=400&width=600"
+        }
+      ]
+    }
+  }
