@@ -3,13 +3,13 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 # Routers
-from routes.producto_routes import router as producto_router
-from routes.cliente_routes import router as cliente_router
-from routes.factura_routes import router as factura_router
+from Billing_Backend.routes.producto_routes import router as producto_router
+from Billing_Backend.routes.cliente_routes import router as cliente_router
+from Billing_Backend.routes.factura_routes import router as factura_router
 
 # Models
-from model.producto_m import Producto
-from model.cliente_m import Cliente
+from Billing_Backend.model.producto_m import Producto
+from Billing_Backend.model.cliente_m import Cliente
 
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
