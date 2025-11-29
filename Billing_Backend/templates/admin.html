@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h1>Bienvenido, {{ user.nombre }} (Admin)</h1>
+
+    <h2>Productos</h2>
+    <ul>
+    {% for p in productos %}
+        <li>{{ p.nombre }} - ${{ p.precio }} - Stock: {{ p.stock }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Clientes</h2>
+    <ul>
+    {% for c in clientes %}
+        <li>{{ c.nombre }} - {{ c.email }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Agregar Producto</h2>
+    <form action="/producto/add" method="post">
+        Nombre: <input type="text" name="nombre" required><br>
+        Precio: <input type="number" name="precio" step="0.01" required><br>
+        Stock: <input type="number" name="stock" required><br>
+        <button type="submit">Agregar</button>
+    </form>
+
+    <h2>Agregar Cliente</h2>
+    <form action="/cliente/add" method="post">
+        Nombre: <input type="text" name="nombre" required><br>
+        Email: <input type="email" name="email" required><br>
+        <button type="submit">Agregar</button>
+    </form>
+</body>
+</html>
