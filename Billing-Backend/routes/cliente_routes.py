@@ -1,30 +1,18 @@
-from flask import Blueprint, jsonify, request
+from fastapi import APIRouter, Body
 from model.cliente_m import Cliente
 
-cliente_bp = Blueprint("cliente", __name__)
+router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
-# -------------------------
-# GET /clientes
-# -------------------------
-@cliente_bp.get("/")
+@router.get("/")
 def get_clients():
     clientes = Cliente.all()
-    return jsonify([c.to_dict() for c in clientes])
+    return [c.to_dict() for c in clientes]
 
-
-# -------------------------
-# POST /clientes
-# -------------------------
-@cliente_bp.post("/")
-def create_client():
-    # Asegura que data sea siempre un dict
-    data: dict = request.get_json(force=True) or {}
-
+@router.post("/")
+def create_client(data: dict = Body(...)):
     c = Cliente(
         nombre=data.get("nombre"),
         email=data.get("email")
     )
-
     c.save()
-
-    return jsonify({"status": "cliente creado"})
+    return {"status": "cliente creado"}

@@ -1,22 +1,19 @@
-from flask import Blueprint, jsonify, request
+from fastapi import APIRouter, Body
 from model.producto_m import Producto
 
-producto_bp = Blueprint("producto", __name__)
+router = APIRouter(prefix="/productos", tags=["Productos"])
 
-@producto_bp.get("/")
+@router.get("/")
 def get_products():
-    productos = Producto.get_all()  # ← usa el método de tu modelo
-    return jsonify([p.to_dict() for p in productos])
+    productos = Producto.get_all()
+    return [p.to_dict() for p in productos]
 
-@producto_bp.post("/")
-def create_product():
-    data = request.get_json(force=True) or {}
-
+@router.post("/")
+def create_product(data: dict = Body(...)):
     p = Producto(
         nombre=data.get("nombre"),
         precio=data.get("precio"),
-        stock=data.get("stock")
+        stock=data.get("stock"),
     )
     p.save()
-
-    return jsonify({"status": "producto creado"})
+    return {"status": "producto creado"}

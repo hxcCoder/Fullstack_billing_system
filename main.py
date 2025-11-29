@@ -1,25 +1,30 @@
-from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse, RedirectResponse
+
+# Routers
+from routes.producto_routes import router as producto_router
+from routes.cliente_routes import router as cliente_router
+from routes.factura_routes import router as factura_router
+
+# Models
 from model.producto_m import Producto
 from model.cliente_m import Cliente
-from model.base_model import BaseModel
 
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 
 # -------------------------
-# Rutas de Producto y Cliente
+# Rutas de frontend con formularios
 # -------------------------
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
-    productos = Producto.all()  # llamamos al método all() de Producto
-    clientes = Cliente.all()    # llamamos al método all() de Cliente
+    productos = Producto.all()
+    clientes = Cliente.all()
     return templates.TemplateResponse(
         "index.html",
         {"request": request, "productos": productos, "clientes": clientes}
     )
-
 
 @app.post("/producto/add")
 def add_producto(nombre: str = Form(...), precio: float = Form(...), stock: int = Form(...)):
@@ -31,5 +36,17 @@ def add_producto(nombre: str = Form(...), precio: float = Form(...), stock: int 
 def add_cliente(nombre: str = Form(...), email: str = Form(...)):
     c = Cliente(nombre=nombre, email=email)
     c.save()
-    # Redirige a la página principal para actualizar la lista
     return RedirectResponse(url="/", status_code=303)
+
+# -------------------------
+# Routers de API REST
+# -------------------------
+app.include_router(producto_router)  # prefix="/productos" ya definido en router
+app.include_router(cliente_router)   # prefix="/clientes"
+app.include_router(factura_router)   # prefix="/facturas"
+
+# -------------------------
+# Nota: Ejecutar con:
+# uvicorn main:app --reload
+# -------------------------
+
