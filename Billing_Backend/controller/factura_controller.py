@@ -1,49 +1,54 @@
-from Billing_Backend.model.base_model import BaseModel
-from typing import Optional, List, Any, Type, cast
+from Billing_Backend.model.factura_m import Factura
+from typing import List, Optional
+from datetime import datetime
 
-class Factura(BaseModel):
-    table_name = "factura"
-    pk_field = "id_factura"
+class FacturaController:
 
-    def __init__(
-        self,
-        id_factura: Optional[int] = None,
-        id_cliente: Optional[int] = None,
-        fecha: Optional[str] = None,  # o datetime según tu DB
-        total: Optional[float] = 0.0
-    ):
-        self.id_factura = id_factura
-        self.id_cliente = id_cliente
-        self.fecha = fecha
-        self.total = total
+    @staticmethod
+    def get_factura(id_factura: int) -> Optional[Factura]:
+        """
+        Retorna una factura por ID.
+        """
+        return Factura.get(id_factura)
 
-    # Guardar (insert / update)
-    def save(self) -> bool:
-        data = self.to_dict()
-        if self.id_factura is None:
-            return self.insert(data)
-        else:
-            return self.update(self.id_factura, data)
+    @staticmethod
+    def get_todas() -> List[Factura]:
+        """
+        Retorna todas las facturas.
+        """
+        return Factura.all()
 
-    # CRUD
-    @classmethod
-    def get(cls, id_factura: int) -> Optional["Factura"]:
-        result = cls.get_by_id(id_factura, cls)
-        return cast(Optional["Factura"], result)
+    @staticmethod
+    def crear_factura(id_cliente: int, fecha: Optional[str | datetime], total: float) -> bool:
+        """
+        Crea una nueva factura.
+        PostgreSQL generará id_factura automáticamente.
+        """
+        factura = Factura(
+            id_cliente=id_cliente,
+            fecha=fecha,
+            total=total
+        )
+        return factura.save()
 
-    @classmethod
-    def get_all(cls) -> List["Factura"]:
-        return [cast("Factura", r) for r in cls.list_all(cls)]
+    @staticmethod
+    def actualizar_factura(id_factura: int, id_cliente: int, fecha: Optional[str | datetime], total: float) -> bool:
+        """
+        Actualiza una factura ya existente.
+        """
+        factura = Factura.get(id_factura)
+        if not factura:
+            return False
 
-    @classmethod
-    def delete(cls, id_value: int) -> bool:
-        return super().delete(id_value)
+        factura.id_cliente = id_cliente
+        factura.fecha = fecha
+        factura.total = total
 
-    # Conversión a diccionario
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id_factura": self.id_factura,
-            "id_cliente": self.id_cliente,
-            "fecha": self.fecha,
-            "total": self.total,
-        }
+        return factura.save()
+
+    @staticmethod
+    def eliminar_factura(id_factura: int) -> bool:
+        """
+        Elimina la factura por ID.
+        """
+        return Factura.delete_by_id(id_factura)

@@ -1,42 +1,32 @@
-# config/db_config.py
-import oracledb
-from typing import Optional
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import os
 
-class ConexionOracle:
-    """
-    Clase para manejar la conexión a Oracle DB.
-    Uso Singleton: mantiene una sola conexión abierta.
-    """
+class ConexionPostgres:
+    _connection = None
 
-    def __init__(self, user: str = "TU_USUARIO", password: str = "TU_CONTRASEÑA", dsn: str = "localhost:1521/XEPDB1"):
-        self.user = user
-        self.password = password
-        self.dsn = dsn
-        self._connection: Optional[oracledb.Connection] = None
+    @classmethod
+    def get_connection(cls):
+        if cls._connection is None:
+            cls._connection = psycopg2.connect(
+                host=os.getenv("DB_HOST", "localhost"),
+                port=os.getenv("DB_PORT", "5432"),
+                database=os.getenv("DB_NAME", "billing"),
+                user=os.getenv("DB_USER", "postgres"),
+                password=os.getenv("DB_PASSWORD", "postgres"),
+                cursor_factory=RealDictCursor
+            )
+        return cls._connection
 
-    def get_connection(self) -> oracledb.Connection:
-        """
-        Retorna una conexión activa a la base de datos.
-        Si no existe, la crea.
-        """
-        if self._connection is None:
-            try:
-                self._connection = oracledb.connect(
-                    user=self.user,
-                    password=self.password,
-                    dsn=self.dsn
-                )
-                print("[OK] Conexión Oracle establecida")
-            except Exception as e:
-                print(f"[ERROR] Conexión Oracle: {e}")
-                raise
-        return self._connection
 
-    def close(self):
-        """
-        Cierra la conexión si existe.
-        """
-        if self._connection:
-            self._connection.close()
-            self._connection = None
-            print("[OK] Conexión Oracle cerrada")
+def get_db():
+    conn = ConexionPostgres.get_connection()
+    cur = conn.cursor()
+    try:
+        yield cur
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        cur.close()

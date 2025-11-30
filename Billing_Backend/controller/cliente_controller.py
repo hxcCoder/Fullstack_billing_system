@@ -1,46 +1,48 @@
-from Billing_Backend.model.base_model import BaseModel
-from typing import Optional, List, Any, cast
+from Billing_Backend.model.cliente_m import Cliente
+from typing import List, Optional
 
-class Cliente(BaseModel):
-    table_name = "cliente"
-    pk_field = "id_cliente"
 
-    def __init__(
-        self,
-        id_cliente: Optional[int] = None,
-        nombre: Optional[str] = None,
-        email: Optional[str] = None
-    ):
-        self.id_cliente = id_cliente
-        self.nombre = nombre
-        self.email = email
+class ClienteController:
 
-    # Guardar (insert / update)
-    def save(self) -> bool:
-        data = self.to_dict()
-        if self.id_cliente is None:
-            return self.insert(data)
-        else:
-            return self.update(self.id_cliente, data)
+    @staticmethod
+    def get_cliente(id_cliente: int) -> Optional[Cliente]:
+        """
+        Retorna un cliente por su ID.
+        """
+        return Cliente.get(id_cliente)
 
-    # CRUD
-    @classmethod
-    def get(cls, id_cliente: int) -> Optional["Cliente"]:
-        result = cls.get_by_id(id_cliente, cls)
-        return cast(Optional["Cliente"], result)
+    @staticmethod
+    def get_todos() -> List[Cliente]:
+        """
+        Retorna todos los clientes.
+        """
+        return Cliente.all()
 
-    @classmethod
-    def get_all(cls) -> List["Cliente"]:
-        return [cast("Cliente", r) for r in cls.list_all(cls)]
+    @staticmethod
+    def crear_cliente(nombre: str, email: str) -> bool:
+        """
+        Crea un nuevo cliente.
+        """
+        cliente = Cliente(nombre=nombre, email=email)
+        return cliente.save()
 
-    @classmethod
-    def delete(cls, id_value: int) -> bool:
-        return super().delete(id_value)
+    @staticmethod
+    def actualizar_cliente(id_cliente: int, nombre: str, email: str) -> bool:
+        """
+        Actualiza los datos de un cliente existente.
+        """
+        cliente = Cliente.get(id_cliente)
+        if not cliente:
+            return False
 
-    # Conversión a diccionario
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id_cliente": self.id_cliente,
-            "nombre": self.nombre,
-            "email": self.email
-        }
+        cliente.nombre = nombre
+        cliente.email = email
+
+        return cliente.save()
+
+    @staticmethod
+    def eliminar_cliente(id_cliente: int) -> bool:
+        """
+        Elimina un cliente por ID.
+        """
+        return Cliente.delete_by_id(id_cliente)
