@@ -1,7 +1,6 @@
 from Billing_Backend.model.base_model import BaseModel
 from typing import Optional, List, cast
 
-
 class Producto(BaseModel):
     table_name = "producto"
     pk_field = "id_producto"
@@ -18,9 +17,12 @@ class Producto(BaseModel):
         self.precio = precio
         self.stock = stock
 
+    # ---------------------------
+    #      SERIALIZACIÓN
+    # ---------------------------
     def to_dict(self) -> dict:
         """
-        Devuelve un diccionario listo para INSERT/UPDATE.
+        Diccionario listo para INSERT/UPDATE.
         """
         data = {
             "nombre": self.nombre,
@@ -28,26 +30,27 @@ class Producto(BaseModel):
             "stock": self.stock
         }
 
-        if self.id_producto is not None:  # UPDATE
+        if self.id_producto is not None:
             data["id_producto"] = self.id_producto
 
         return data
 
+    # ---------------------------
+    #         CRUD
+    # ---------------------------
     def save(self) -> bool:
         """
-        Inserta o actualiza.
+        Inserta si no hay id_producto; actualiza si existe.
         """
         data = self.to_dict()
 
-        # INSERT
         if self.id_producto is None:
             new_id = self.insert(data)
-            if new_id:
+            if new_id is not None:
                 self.id_producto = new_id
                 return True
             return False
 
-        # UPDATE
         return self.update(self.id_producto, data)
 
     @classmethod
@@ -56,7 +59,7 @@ class Producto(BaseModel):
         return cast(Optional["Producto"], result)
 
     @classmethod
-    def get_all(cls) -> List["Producto"]:
+    def all(cls) -> List["Producto"]:
         return [cast("Producto", r) for r in cls.list_all(cls)]
 
     @classmethod

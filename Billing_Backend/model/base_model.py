@@ -1,15 +1,12 @@
-# model/base_model.py
-
 from Billing_Backend.config.db_config import get_db
 from typing import Type, List, Optional, Any, Dict, TypeVar, cast
 
 T = TypeVar("T", bound="BaseModel")
 
-
 class BaseModel:
     """
     Clase base para todos los modelos del sistema.
-    Provee operaciones CRUD genéricas usando PostgreSQL.
+    Provee operaciones CRUD genéricas usando PostgreSQL con RealDictCursor.
     """
 
     table_name: str = ""
@@ -19,23 +16,24 @@ class BaseModel:
     # INSERT
     # -----------------------------
     @classmethod
-    def insert(cls, data: Dict[str, Any]) -> bool:
+    def insert(cls, data: Dict[str, Any]) -> Optional[int]:
         if not cls.table_name:
             raise ValueError("table_name no definido en el modelo")
 
         columns = ", ".join(data.keys())
-        placeholders = ", ".join(["%s" for _ in data.keys()])
+        placeholders = ", ".join(["%s"] * len(data))
         values = tuple(data.values())
 
-        query = f"INSERT INTO {cls.table_name} ({columns}) VALUES ({placeholders})"
+        query = f"INSERT INTO {cls.table_name} ({columns}) VALUES ({placeholders}) RETURNING {cls.pk_field}"
 
         with next(get_db()) as cur:
             try:
                 cur.execute(query, values)
-                return True
+                row = cur.fetchone()
+                return row[cls.pk_field] if row else None
             except Exception as e:
                 print(f"[ERROR] INSERT en {cls.table_name}: {e}")
-                return False
+                return None
 
     # -----------------------------
     # GET BY ID
@@ -51,12 +49,7 @@ class BaseModel:
             try:
                 cur.execute(query, (id_value,))
                 row = cur.fetchone()
-
-                if row is None:
-                    return None
-
-                return model_class(**row)
-
+                return model_class(**row) if row else None
             except Exception as e:
                 print(f"[ERROR] GET_BY_ID en {cls.table_name}: {e}")
                 return None
@@ -75,9 +68,7 @@ class BaseModel:
             try:
                 cur.execute(query)
                 rows = cur.fetchall() or []
-
-                return [model_class(**row) for row in rows]
-
+                return [model_class(**r) for r in rows]
             except Exception as e:
                 print(f"[ERROR] LIST_ALL en {cls.table_name}: {e}")
                 return []

@@ -19,9 +19,13 @@ class DetalleFactura(BaseModel):
         self.cantidad = cantidad
         self.precio_unitario = precio_unitario
 
+    # -------------------------
+    #   SERIALIZACIÓN
+    # -------------------------
     def to_dict(self) -> dict:
         """
-        Dict para INSERT/UPDATE (no incluye PK cuando es None).
+        Devuelve un diccionario listo para INSERT/UPDATE.
+        No incluye la PK si es None.
         """
         data = {
             "id_factura": self.id_factura,
@@ -29,22 +33,23 @@ class DetalleFactura(BaseModel):
             "cantidad": self.cantidad,
             "precio_unitario": self.precio_unitario,
         }
-
-        if self.id_detalle is not None:  # Solo para UPDATE
+        if self.id_detalle is not None:
             data["id_detalle"] = self.id_detalle
-
         return data
 
+    # -------------------------
+    #        CRUD
+    # -------------------------
     def save(self) -> bool:
         """
-        Inserta si no hay PK; actualiza si existe.
+        Inserta o actualiza el registro.
         """
         data = self.to_dict()
 
-        # INSERT
         if self.id_detalle is None:
+            # INSERT
             new_id = self.insert(data)
-            if new_id:
+            if new_id is not None:
                 self.id_detalle = new_id
                 return True
             return False
@@ -54,13 +59,23 @@ class DetalleFactura(BaseModel):
 
     @classmethod
     def get(cls, id_detalle: int) -> Optional["DetalleFactura"]:
+        """
+        Devuelve un objeto DetalleFactura por su ID.
+        """
         result = cls.get_by_id(id_detalle, cls)
         return cast(Optional["DetalleFactura"], result)
 
     @classmethod
     def all(cls) -> List["DetalleFactura"]:
+        """
+        Devuelve todos los registros como lista de objetos.
+        """
         return [cast("DetalleFactura", r) for r in cls.list_all(cls)]
 
     @classmethod
+    
     def delete_by_id(cls, id_detalle: int) -> bool:
+        """
+        Elimina un registro por su ID.
+        """
         return cls.delete(id_detalle)

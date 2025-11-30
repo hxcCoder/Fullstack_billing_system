@@ -2,7 +2,6 @@ from Billing_Backend.model.base_model import BaseModel
 from typing import Optional, List, cast, Union
 from datetime import datetime
 
-
 class Factura(BaseModel):
     table_name = "factura"
     pk_field = "id_factura"
@@ -24,15 +23,13 @@ class Factura(BaseModel):
     # ---------------------------
     def to_dict(self) -> dict:
         """
-        Diccionario para INSERT/UPDATE.
-        PostgreSQL genera id_factura automáticamente.
+        Devuelve un diccionario listo para INSERT/UPDATE.
         """
         data = {
             "id_cliente": self.id_cliente,
             "fecha": self._format_fecha(self.fecha),
             "total": self.total,
         }
-
         return data
 
     def _format_fecha(self, fecha):
@@ -42,15 +39,18 @@ class Factura(BaseModel):
         return fecha
 
     # ---------------------------
-    #            CRUD
+    #        CRUD
     # ---------------------------
     def save(self) -> bool:
+        """
+        Inserta o actualiza el registro.
+        """
         data = self.to_dict()
 
-        # INSERT — PostgreSQL autogenera ID
         if self.id_factura is None:
-            new_id = self.insert(data)  # BaseModel debe RETURNING id_factura
-            if new_id:
+            # INSERT
+            new_id = self.insert(data)
+            if new_id is not None:
                 self.id_factura = new_id
                 return True
             return False
@@ -60,13 +60,22 @@ class Factura(BaseModel):
 
     @classmethod
     def get(cls, id_factura: int) -> Optional["Factura"]:
+        """
+        Devuelve un objeto Factura por su ID.
+        """
         result = cls.get_by_id(id_factura, cls)
         return cast(Optional["Factura"], result)
 
     @classmethod
     def all(cls) -> List["Factura"]:
+        """
+        Devuelve todos los registros como lista de objetos.
+        """
         return [cast("Factura", r) for r in cls.list_all(cls)]
 
     @classmethod
     def delete_by_id(cls, id_factura: int) -> bool:
+        """
+        Elimina un registro por su ID.
+        """
         return cls.delete(id_factura)

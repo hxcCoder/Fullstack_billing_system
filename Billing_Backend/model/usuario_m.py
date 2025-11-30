@@ -1,7 +1,6 @@
 import bcrypt
 from Billing_Backend.model.base_model import BaseModel
-from typing import Optional, cast
-
+from typing import Optional, List, cast
 
 class Usuario(BaseModel):
     table_name = "usuario"
@@ -22,7 +21,7 @@ class Usuario(BaseModel):
         self.rol = rol
 
     # -------------------------
-    #   MÉTODOS DE PASSWORD
+    #      PASSWORD
     # -------------------------
     def hash_password(self, plain: str) -> str:
         salt = bcrypt.gensalt()
@@ -35,19 +34,19 @@ class Usuario(BaseModel):
         return bcrypt.checkpw(plain.encode(), self.password.encode())
 
     # -------------------------
-    #   MÉTODOS CRUD
+    #        CRUD
     # -------------------------
     def save(self) -> bool:
         data = self.to_dict()
 
-        # Si trae password en texto → hashear
+        # Hash de password si es necesario
         if self.password and not self.password.startswith("$2b$"):
             data["password"] = self.hash_password(self.password)
 
         # INSERT
         if self.id_usuario is None:
             new_id = self.insert(data)
-            if new_id:
+            if new_id is not None:
                 self.id_usuario = new_id
                 return True
             return False
@@ -57,21 +56,21 @@ class Usuario(BaseModel):
 
     @classmethod
     def get(cls, id_usuario: int) -> Optional["Usuario"]:
-        result = BaseModel.get_by_id(id_usuario, cls)
+        result = cls.get_by_id(id_usuario, cls)
         return cast(Optional["Usuario"], result)
 
     @classmethod
-    def all(cls):
-        return [cast("Usuario", r) for r in BaseModel.list_all(cls)]
+    def all(cls) -> List["Usuario"]:
+        return [cast("Usuario", r) for r in cls.list_all(cls)]
 
     @classmethod
     def delete_by_id(cls, id_usuario: int) -> bool:
-        return BaseModel.delete(id_usuario)
+        return cls.delete(id_usuario)
 
     # -------------------------
-    #   SERIALIZACIÓN
+    #      SERIALIZACIÓN
     # -------------------------
-    def to_dict(self):
+    def to_dict(self) -> dict:
         data = {
             "nombre": self.nombre,
             "email": self.email,

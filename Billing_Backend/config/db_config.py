@@ -21,7 +21,7 @@ class ConexionPostgres:
 
 def get_db():
     conn = ConexionPostgres.get_connection()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=RealDictCursor)  # <--- aquí
     try:
         yield cur
         conn.commit()
@@ -30,3 +30,4 @@ def get_db():
         raise e
     finally:
         cur.close()
+
