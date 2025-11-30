@@ -1,10 +1,9 @@
-# main.py (versión segura para usuario opcional)
 from fastapi import FastAPI, Request, Form, Depends, Header
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from typing import Optional
 import jwt
-from datetime import datetime, timedelta
+import os
 
 from Billing_Backend.model.producto_m import Producto
 from Billing_Backend.model.cliente_m import Cliente
@@ -15,12 +14,11 @@ app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 
 # -------------------------
-# Función para usuario opcional
+# Usuario opcional (frontend)
 # -------------------------
 def get_current_user_optional(authorization: Optional[str] = Header(None)) -> Optional[Usuario]:
     if authorization:
         try:
-            # Extrae token de "Bearer <token>"
             token = authorization.split(" ")[1]
             payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
             user_id = payload.get("id_usuario")
@@ -30,7 +28,7 @@ def get_current_user_optional(authorization: Optional[str] = Header(None)) -> Op
     return None
 
 # --------------------------------------
-# FRONTEND
+# Rutas frontend
 # --------------------------------------
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request, user: Optional[Usuario] = Depends(get_current_user_optional)):
@@ -68,6 +66,7 @@ def add_cliente(
 from Billing_Backend.routes.producto_routes import router as producto_router
 from Billing_Backend.routes.cliente_routes import router as cliente_router
 from Billing_Backend.routes.factura_routes import router as factura_router
+
 app.include_router(producto_router, dependencies=[Depends(get_current_user)])
 app.include_router(cliente_router, dependencies=[Depends(get_current_user)])
 app.include_router(factura_router, dependencies=[Depends(get_current_user)])

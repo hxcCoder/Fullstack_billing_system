@@ -1,6 +1,10 @@
+import os
+from dotenv import load_dotenv
 import psycopg2
 from psycopg2.extras import RealDictCursor
-import os
+
+# Carga las variables de entorno
+load_dotenv()
 
 class ConexionPostgres:
     _connection = None
@@ -9,19 +13,18 @@ class ConexionPostgres:
     def get_connection(cls):
         if cls._connection is None:
             cls._connection = psycopg2.connect(
-                host=os.getenv("DB_HOST", "localhost"),
-                port=os.getenv("DB_PORT", "5432"),
-                database=os.getenv("DB_NAME", "billing"),
-                user=os.getenv("DB_USER", "postgres"),
-                password=os.getenv("DB_PASSWORD", "postgres"),
+                host=os.getenv("DB_HOST"),
+                port=os.getenv("DB_PORT"),
+                database=os.getenv("DB_NAME"),
+                user=os.getenv("DB_USER"),
+                password=os.getenv("DB_PASSWORD"),
                 cursor_factory=RealDictCursor
             )
         return cls._connection
 
-
 def get_db():
     conn = ConexionPostgres.get_connection()
-    cur = conn.cursor(cursor_factory=RealDictCursor)  # <--- aquí
+    cur = conn.cursor(cursor_factory=RealDictCursor)
     try:
         yield cur
         conn.commit()
@@ -30,4 +33,3 @@ def get_db():
         raise e
     finally:
         cur.close()
-
