@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, Depends
 from Billing_Backend.model.cliente_m import Cliente
-from Billing_Backend.main import get_current_user, Usuario
+from Billing_Backend.routes.dependencias import get_current_user  # <-- import limpio
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 

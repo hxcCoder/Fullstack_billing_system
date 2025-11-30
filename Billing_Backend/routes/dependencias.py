@@ -12,13 +12,17 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(auth_sc
     token = credentials.credentials
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")
-        if not email:
+        
+        user_id = payload.get("sub")
+        if not user_id:
             raise HTTPException(status_code=401, detail="Token inválido")
-        usuario = next((u for u in Usuario.all() if u.email == email), None)
+
+        usuario = Usuario.get(user_id)
         if not usuario:
             raise HTTPException(status_code=401, detail="Usuario no encontrado")
+
         return usuario
+
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expirado")
     except Exception:

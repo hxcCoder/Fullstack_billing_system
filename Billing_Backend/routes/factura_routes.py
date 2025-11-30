@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, Depends
 from Billing_Backend.model.factura_m import Factura
-from Billing_Backend.main import get_current_user, Usuario
+from Billing_Backend.routes.dependencias import get_current_user
 
 router = APIRouter(prefix="/facturas", tags=["Facturas"])
 

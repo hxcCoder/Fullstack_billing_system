@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, Depends
 from Billing_Backend.model.producto_m import Producto
-from Billing_Backend.dependencies import get_current_user  # <-- cambio aquí
+from Billing_Backend.routes.dependencias import get_current_user  # <-- cambio aquí
 
 router = APIRouter(prefix="/productos", tags=["Productos"])
 
