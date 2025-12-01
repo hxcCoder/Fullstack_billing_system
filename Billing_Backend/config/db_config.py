@@ -1,14 +1,14 @@
-# Billing_Backend/config/db_config.py
+import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
 def get_db():
     conn = psycopg2.connect(
-        host="localhost",
-        database="billing_system",
-        user="postgres",
-        password="TU_PASSWORD",
-        port=5432
+        host=os.getenv("DB_HOST"),
+        database=os.getenv("DB_SERVICE"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        port=os.getenv("DB_PORT")
     )
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
