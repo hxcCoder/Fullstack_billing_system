@@ -3,7 +3,6 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from typing import Optional
 import jwt
-import os
 
 from Billing_Backend.model.producto_m import Producto
 from Billing_Backend.model.cliente_m import Cliente
@@ -11,7 +10,8 @@ from Billing_Backend.model.usuario_m import Usuario
 from Billing_Backend.routes.auth_routes import JWT_SECRET, JWT_ALGORITHM, get_current_user
 
 app = FastAPI()
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="Billing_Backend/templates")
+
 
 # -------------------------
 # Usuario opcional (frontend)
@@ -27,8 +27,9 @@ def get_current_user_optional(authorization: Optional[str] = Header(None)) -> Op
             return None
     return None
 
+
 # --------------------------------------
-# Rutas frontend
+# Rutas frontend (HTML con Jinja2)
 # --------------------------------------
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request, user: Optional[Usuario] = Depends(get_current_user_optional)):
@@ -38,6 +39,7 @@ def index(request: Request, user: Optional[Usuario] = Depends(get_current_user_o
         "index.html",
         {"request": request, "productos": productos, "clientes": clientes, "usuario": user}
     )
+
 
 @app.post("/producto/add")
 def add_producto(
@@ -50,6 +52,7 @@ def add_producto(
     p.save()
     return RedirectResponse("/", status_code=303)
 
+
 @app.post("/cliente/add")
 def add_cliente(
     nombre: str = Form(...),
@@ -59,6 +62,7 @@ def add_cliente(
     c = Cliente(nombre=nombre, email=email)
     c.save()
     return RedirectResponse("/", status_code=303)
+
 
 # --------------------------------------
 # API REST protegida
@@ -70,6 +74,7 @@ from Billing_Backend.routes.factura_routes import router as factura_router
 app.include_router(producto_router, dependencies=[Depends(get_current_user)])
 app.include_router(cliente_router, dependencies=[Depends(get_current_user)])
 app.include_router(factura_router, dependencies=[Depends(get_current_user)])
+
 
 # --------------------------------------
 # Auth
