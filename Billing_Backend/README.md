@@ -1,2 +1,2 @@
 # Billing-System
-Un sistema backend de facturacion usando FastApi y frontend html.
+Un sistema backend de facturacion usando FastApi y frontend adaptable para next.
